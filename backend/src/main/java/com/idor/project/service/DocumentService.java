@@ -47,4 +47,30 @@ public class DocumentService {
 
         return documentRepository.save(document);
     }
+
+    // VULNERABLE - Updates any document without checking if user owns it
+    public Document updateDocument(Long documentId, CreateDocumentRequest request) {
+        Optional<Document> docOptional = documentRepository.findById(documentId);
+        
+        if (docOptional.isEmpty()) {
+            throw new RuntimeException("Document not found");
+        }
+
+        Document document = docOptional.get();
+        document.setTitle(request.getTitle());
+        document.setContent(request.getContent());
+        
+        return documentRepository.save(document);
+    }
+
+    // VULNERABLE - Deletes any document without checking if user owns it
+    public void deleteDocument(Long documentId) {
+        Optional<Document> docOptional = documentRepository.findById(documentId);
+        
+        if (docOptional.isEmpty()) {
+            throw new RuntimeException("Document not found");
+        }
+
+        documentRepository.deleteById(documentId);
+    }
 }

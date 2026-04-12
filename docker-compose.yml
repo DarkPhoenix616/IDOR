@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  mysql:
+    image: 'mysql:latest'
+    container_name: idor-mysql
+    environment:
+      MYSQL_DATABASE: idor_db
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: verysecret
+      MYSQL_USER: myuser
+    ports:
+      - '3307:3306'
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - idor-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Spring Boot Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: idor-backend
+    environment:
+      DB_URL: jdbc:mysql://mysql:3306/idor_db
+      DB_USERNAME: myuser
+      DB_PASSWORD: secret
+      JWT_SECRET: your_super_secret_jwt_key_here_make_it_long_and_random
+      JWT_EXPIRATION: 86400000
+    ports:
+      - '8080:8080'
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - idor-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # React Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: idor-frontend
+    environment:
+      REACT_APP_API_URL: http://localhost:8080/api
+    ports:
+      - '3000:3000'
+    depends_on:
+      - backend
+    networks:
+      - idor-network
+    stdin_open: true
+    tty: true
+
+volumes:
+  mysql_data:
+
+networks:
+  idor-network:
+    driver: bridge

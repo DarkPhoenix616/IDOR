@@ -64,4 +64,28 @@ public class DocumentController {
     public ResponseEntity<List<Document>> getUserDocuments(@PathVariable Long userId) {
         return ResponseEntity.ok(documentService.getUserDocuments(userId));
     }
+
+    // VULNERABLE - Update document by ID without checking ownership
+    @PutMapping("/{id}")
+    public ResponseEntity<Document> updateDocument(
+            @PathVariable Long id,
+            @RequestBody CreateDocumentRequest request) {
+        try {
+            Document updated = documentService.updateDocument(id, request);
+            return ResponseEntity.ok(updated);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // VULNERABLE - Delete document by ID without checking ownership
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteDocument(@PathVariable Long id) {
+        try {
+            documentService.deleteDocument(id);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
