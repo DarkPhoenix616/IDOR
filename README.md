@@ -1,4 +1,13 @@
-# IDOR Vulnerability Proof-of-Concept - Complete Implementation
+# IDOR Vulnerability Proof-of-Concept
+
+## 👥 Project Team
+
+1. Shlok Kanani (B23CS1068)
+2. Prakhar Goyal (B23CS1106)
+3. Raditya Saraf (B23CS1107)
+4. Danie George John (B23ES1012)
+5. Bhawani Shankar Prajapat (B23CS1104)
+
 
 ## 📋 Project Overview
 
@@ -382,16 +391,6 @@ spring.jpa.hibernate.ddl-auto=update
 - **PHASE_1_COMPLETION_REPORT.md** - Phase 1 detailed report
 - **JWT_IMPLEMENTATION_SUMMARY.md** - JWT authentication details
 - **DATABASE_DEPLOYMENT_GUIDE.md** - Database setup instructions
-
----
-
-## 👥 Project Team
-
-1. Shlok Kanani (B23CS1068)
-2. Prakhar Goyal (B23CS1106)
-3. Raditya Saraf (B23CS1107)
-4. Danie George John (B23ES1012)
-5. Bhawani Shankar Prajapat (B23CS1104)
 
 ---
 
